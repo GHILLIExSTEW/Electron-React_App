@@ -11,16 +11,17 @@ declare global {
 }
 import './App.css';
 
+
 const SERVICE_LABELS = [
   'Discord Bot',
   'Web Backend',
-  'Other Service'
+  'Flask Service'
 ];
 
 const SCRIPT_PATHS = [
-  'C:/path/to/discord_bot.py',
-  'C:/path/to/web_backend.py',
-  'C:/path/to/other_service.py'
+  '../DBSBM/bot/main.py', // Discord Bot
+  '../DBSBM/webapp.py',  // Web Backend
+  '../DBSBMWEB/flask_service.py' // Flask App (Other Service)
 ];
 
 interface ServiceControlProps {
@@ -29,51 +30,99 @@ interface ServiceControlProps {
   scriptPath: string;
 }
 
-function ServiceControl({ index, label, scriptPath }: ServiceControlProps) {
-  const [status, setStatus] = useState('stopped');
-  const [log, setLog] = useState('');
 
-  const handleStart = async () => {
-    await window.electronAPI.serviceControl('start', index, scriptPath);
-    setStatus('running');
-  };
-  const handleStop = async () => {
-    await window.electronAPI.serviceControl('stop', index, scriptPath);
-    setStatus('stopped');
-  };
+interface ServiceState {
+  status: 'stopped' | 'running';
+  log: string;
+}
 
+function ServiceTabs() {
+  const [activeTab, setActiveTab] = useState(0);
+  const [services, setServices] = useState<ServiceState[]>([
+    { status: 'stopped', log: '' },
+    { status: 'stopped', log: '' },
+    { status: 'stopped', log: '' },
+  ]);
+  // Poll logs for running services
   useEffect(() => {
-    if (status === 'running') {
-      const interval = setInterval(async () => {
-        const logText = await window.electronAPI.getLog(index);
-        setLog(logText);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [status, index]);
+    const intervals: NodeJS.Timeout[] = [];
+    services.forEach((service, i) => {
+      if (service.status === 'running') {
+        const interval = setInterval(async () => {
+          const logText = await window.electronAPI.getLog(i);
+          setServices(prev => {
+            const updated = [...prev];
+            updated[i] = { ...updated[i], log: logText };
+            return updated;
+          });
+        }, 1000);
+        intervals.push(interval);
+      }
+    });
+    return () => intervals.forEach(clearInterval);
+  }, [services]);
+
+  const handleStart = async (i: number) => {
+    await window.electronAPI.serviceControl('start', i, SCRIPT_PATHS[i]);
+    setServices(prev => {
+      const updated = [...prev];
+      updated[i] = { ...updated[i], status: 'running' };
+      return updated;
+    });
+  };
+  const handleStop = async (i: number) => {
+    await window.electronAPI.serviceControl('stop', i, SCRIPT_PATHS[i]);
+    setServices(prev => {
+      const updated = [...prev];
+      updated[i] = { ...updated[i], status: 'stopped' };
+      return updated;
+    });
+  };
+  const handleStartAll = async () => {
+    await Promise.all(SCRIPT_PATHS.map((path, i) => window.electronAPI.serviceControl('start', i, path)));
+    setServices(prev => prev.map(s => ({ ...s, status: 'running' })));
+  };
+  const handleStopAll = async () => {
+    await Promise.all(SCRIPT_PATHS.map((path, i) => window.electronAPI.serviceControl('stop', i, path)));
+    setServices(prev => prev.map(s => ({ ...s, status: 'stopped' })));
+  };
 
   return (
-    <div className="service-panel">
-      <div className="service-header">
-        <span className={`status-dot ${status}`}></span>
-        <span className="service-label">{label}</span>
-        <button onClick={handleStart} disabled={status === 'running'}>Start</button>
-        <button onClick={handleStop} disabled={status !== 'running'}>Stop</button>
+    <div>
+      <div className="tabs-header">
+        {SERVICE_LABELS.map((label, i) => (
+          <button
+            key={i}
+            className={`tab-btn${activeTab === i ? ' active' : ''}`}
+            onClick={() => setActiveTab(i)}
+          >
+            {label}
+            <span className={`status-dot ${services[i].status}`}></span>
+          </button>
+        ))}
       </div>
-      <pre className="service-log">{log}</pre>
+      <div className="tabs-actions">
+        <button onClick={handleStartAll}>Start All</button>
+        <button onClick={handleStopAll}>Stop All</button>
+      </div>
+      <div className="tab-content">
+        <div className="service-header">
+          <span className="service-label">{SERVICE_LABELS[activeTab]}</span>
+          <button onClick={() => handleStart(activeTab)} disabled={services[activeTab].status === 'running'}>Start</button>
+          <button onClick={() => handleStop(activeTab)} disabled={services[activeTab].status !== 'running'}>Stop</button>
+        </div>
+        <pre className="service-log" style={{height: '60vh', overflow: 'auto'}}>{services[activeTab].log}</pre>
+      </div>
     </div>
   );
 }
+
 
 export default function App() {
   return (
     <div className="app-container">
       <h1>Service Manager</h1>
-      <div className="services-list">
-        {SERVICE_LABELS.map((label, i) => (
-          <ServiceControl key={i} index={i} label={label} scriptPath={SCRIPT_PATHS[i]} />
-        ))}
-      </div>
+      <ServiceTabs />
     </div>
   );
 }

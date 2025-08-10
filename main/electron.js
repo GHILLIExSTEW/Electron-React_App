@@ -24,7 +24,14 @@ function createWindow() {
 
 app.whenReady().then(createWindow);
 
+
 app.on('window-all-closed', () => {
+  // Clear log files on exit
+  logFiles.forEach((file) => {
+    if (file && fs.existsSync(file)) {
+      try { fs.unlinkSync(file); } catch {}
+    }
+  });
   if (process.platform !== 'darwin') app.quit();
 });
 
