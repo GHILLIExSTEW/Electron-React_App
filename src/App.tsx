@@ -13,15 +13,13 @@ import './App.css';
 
 
 const SERVICE_LABELS = [
-  'Discord Bot',
-  'Web Backend',
+  'Bot',
   'Flask Service'
 ];
 
 const SCRIPT_PATHS = [
-  '../DBSBM/bot/main.py', // Discord Bot
-  '../DBSBM/webapp.py',  // Web Backend
-  '../DBSBMWEB/flask_service.py' // Flask App (Other Service)
+  '../DBSBM/bot/main.py', // Bot
+  '../DBSBMWEB/flask_service.py' // Flask Service
 ];
 
 interface ServiceControlProps {
@@ -39,7 +37,6 @@ interface ServiceState {
 function ServiceTabs() {
   const [activeTab, setActiveTab] = useState(0);
   const [services, setServices] = useState<ServiceState[]>([
-    { status: 'stopped', log: '' },
     { status: 'stopped', log: '' },
     { status: 'stopped', log: '' },
   ]);
@@ -111,7 +108,7 @@ function ServiceTabs() {
           <button onClick={() => handleStart(activeTab)} disabled={services[activeTab].status === 'running'}>Start</button>
           <button onClick={() => handleStop(activeTab)} disabled={services[activeTab].status !== 'running'}>Stop</button>
         </div>
-        <pre className="service-log" style={{height: '60vh', overflow: 'auto'}}>{services[activeTab].log}</pre>
+        <pre className="service-log" style={{height: '400px', width: '520px', overflow: 'auto', background: '#18191b', color: '#fff', borderRadius: 8, padding: 16, fontSize: 16, marginTop: 12 }}>{services[activeTab].log}</pre>
       </div>
     </div>
   );
@@ -120,9 +117,11 @@ function ServiceTabs() {
 
 export default function App() {
   return (
-    <div className="app-container">
-      <h1>Service Manager</h1>
-      <ServiceTabs />
+    <div className="app-container" style={{ minHeight: '100vh', minWidth: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#191b1d' }}>
+      <div style={{ background: '#232528', borderRadius: 20, boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)', padding: 40, minWidth: 600, minHeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h1 style={{ fontSize: 36, marginBottom: 24 }}>Service Manager</h1>
+        <ServiceTabs />
+      </div>
     </div>
   );
 }

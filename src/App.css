@@ -1,3 +1,91 @@
+/* Modern tab styles */
+.tabs-header {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  background: #23272b;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #0002;
+}
+.tab-btn {
+  flex: 1;
+  padding: 16px 0;
+  background: #23272b;
+  color: #b9f1c0;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+.tab-btn.active {
+  background: #181a1b;
+  color: #fff;
+  box-shadow: 0 4px 16px #0004;
+  z-index: 2;
+}
+.tab-btn:not(.active):hover {
+  background: #222426;
+  color: #e0ffe0;
+}
+
+.tabs-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.tab-content {
+  background: #181a1b;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 2px 16px #0002;
+  padding: 32px 24px 24px 24px;
+  min-width: 520px;
+}
+
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.service-log {
+  background: #101112;
+  color: #b9f1c0;
+  font-size: 1.08rem;
+  border-radius: 10px;
+  padding: 18px;
+  min-height: 320px;
+  max-height: 480px;
+  overflow-y: auto;
+  margin-top: 8px;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  box-shadow: 0 2px 12px #0003;
+}
+
+button {
+  background: linear-gradient(90deg, #3a7bd5 0%, #00d2ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1.08rem;
+  margin-left: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+button:disabled {
+  background: #444;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 #root {
   max-width: 1280px;
   margin: 0 auto;
