@@ -1,0 +1,146 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #181a1b;
+  color: #f3f3f3;
+}
+
+.app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #23272b;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px #0008;
+  padding: 32px 24px 24px 24px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  letter-spacing: 0.01em;
+}
+
+.services-list {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.service-panel {
+  background: #202225;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0004;
+  padding: 18px 16px 12px 16px;
+  min-width: 260px;
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  background: #888;
+  transition: background 0.2s;
+}
+
+.status-dot.running {
+  background: #4caf50;
+}
+
+.status-dot.stopped {
+  background: #f44336;
+}
+
+.service-label {
+  font-weight: 600;
+  flex: 1;
+}
+
+button {
+  background: #282c34;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  margin-left: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:disabled {
+  background: #444;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.service-log {
+  background: #181a1b;
+  color: #b9f1c0;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  padding: 10px;
+  min-height: 80px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 8px;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+}
